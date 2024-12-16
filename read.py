@@ -16,9 +16,11 @@ def get_header_data(fname: str):
 def get_mda_report(fdata, mda_ind):
     hsize = 13
 
+    start_index = mda_ind + hsize if fdata[mda_ind + hsize] else mda_ind + hsize + 1
+
     tab_data = []
-    for line in fdata[mda_ind + hsize :]:
-        if not line:
+    for line in fdata[start_index :]:
+        if not line or line[0] == "":
             break
 
         if line[4] == "?":
@@ -60,6 +62,9 @@ def get_iso_report(fdata, iso_ind):
 
         line = line[3:]  # remove indent
         data = line.split()
+
+        if len(data) == 9:
+            data = [data[i] for i in [0, 1, 2, 3, 4, 7, 8]]
 
         if len(data) == 8:
             data = data[1:]

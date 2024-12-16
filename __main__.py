@@ -25,23 +25,23 @@ def get_col(data: list[dict]) -> list:
     return col
 
 
-def create_excel(path_to_data: str, fname: str) -> None:
-    files = os.listdir(path_to_data)
+def create_excel(path_to_folder: str, fname: str) -> None:
+    files = os.listdir(path_to_folder)
 
     cols = []
     headers = []
     for file in files:
-        fname, ext = file.split(".")
+        cfname, ext = file.split(".")
 
         if not (ext == "RPT"):
             continue
 
-        header = get_header_data(fname)
+        header = get_header_data(cfname)
         headers.append(header)
 
         sample_col = [header["height"], header["mass"], header["time"], header["date"]]
 
-        raw_data = get_data(os.path.join(path_to_data, file))
+        raw_data = get_data(os.path.join(path_to_folder, file))
         sample_col.extend(get_col(raw_data))
 
         cols.append(sample_col)
@@ -53,7 +53,6 @@ def create_excel(path_to_data: str, fname: str) -> None:
         columns.extend([f"a ({key})", f"u ({key})", f"mda ({key})"])
 
     df = pd.DataFrame(cols, index=index, columns=columns)
-
     df.to_excel(fname)
 
 
@@ -62,11 +61,11 @@ def main():
     print()
 
     path_to_data = input("Path to folder data: ")
-    fname = input("Path for new csv file (remember to add .csv extension): ")
+    fname = input("New file name: ")
     print()
 
-    create_excel(path_to_data, fname)
-    print(f"File created at {fname}.")
+    create_excel(path_to_data, f"{fname}.xlsx")
+    print("File created!")
 
 
 if __name__ == "__main__":
